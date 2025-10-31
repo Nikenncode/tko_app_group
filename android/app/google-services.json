@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "711205798289",
+    "project_id": "tko-app",
+    "storage_bucket": "tko-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:711205798289:android:c1226d347ab801d114da30",
+        "android_client_info": {
+          "package_name": "com.example.tko_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDySVSkk24EVw6RmfQAJPleKuHoXLOvdKQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,46 @@
+name: tko_app
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_riverpod: any
+  cached_network_image: any
+  cupertino_icons: ^1.0.8
+  google_fonts: ^6.1.0
+  firebase_core: ^3.10.0   # or latest stable
+  qr_flutter: ^4.1.0
+  url_launcher: ^6.3.0
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/event_banners/
+    - assets/logo/name.png
+    - assets/discord_logo.png
+    - assets/logo/discord_icon.png
+
+
+  # Uncomment and list your assets here later when you add images:
+  # assets:
+  #   - assets/images/
+  #   - assets/icons/
+
+  # Example for custom fonts if needed later:
+  # fonts:
+  #   - family: CustomFont
+  #     fonts:
+  #       - asset: fonts/CustomFont-Regular.ttf
