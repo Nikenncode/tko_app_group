@@ -15,7 +15,9 @@ dependencies:
   cached_network_image: any
   cupertino_icons: ^1.0.8
   google_fonts: ^6.1.0
-  firebase_core: ^3.10.0   # or latest stable
+  firebase_core: ^3.10.0
+  firebase_auth: ^5.1.0
+  cloud_firestore: ^5.2.0
   qr_flutter: ^4.1.0
   url_launcher: ^6.3.0
 
@@ -32,6 +34,8 @@ flutter:
     - assets/logo/name.png
     - assets/discord_logo.png
     - assets/logo/discord_icon.png
+    - assets/logo/coming_soon_placeholder.png
+    - assets/toys/
 
 
   # Uncomment and list your assets here later when you add images:

@@ -254,7 +254,7 @@ class HomeScreen extends StatelessWidget {
                   break;
 
                 case "Toys & Beyblades":
-                  destination = const ToysScreen();
+                  destination = const ToysListScreen();
                   break;
 
                 case "Supplies & Accessories":
@@ -270,7 +270,7 @@ class HomeScreen extends StatelessWidget {
                   break;
 
                 case "Coming Soon":
-                  destination = const SoonScreen();
+                  destination = const ComingSoonScreen();
                   break;
 
                 default:
