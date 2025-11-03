@@ -36,6 +36,7 @@ flutter:
     - assets/logo/discord_icon.png
     - assets/logo/coming_soon_placeholder.png
     - assets/toys/
+    - assets/banners/
 
 
   # Uncomment and list your assets here later when you add images:

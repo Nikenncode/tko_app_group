@@ -13,13 +13,11 @@ class CustomBottomNav extends StatefulWidget {
 
 class _CustomBottomNavState extends State<CustomBottomNav> {
   void _onItemTapped(int index) {
-    // ✅ If already on the same page, do nothing
     if (index == widget.currentIndex) return;
 
     Widget destination;
     switch (index) {
       case 0:
-      // ✅ When on details screen or any sub-page, this brings user back home
         destination = const HomeScreen();
         break;
       case 1:
@@ -32,7 +30,6 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
         destination = const HomeScreen();
     }
 
-    // ✅ Use pushAndRemoveUntil for Home (so it resets underline properly)
     if (index == 0) {
       Navigator.pushAndRemoveUntil(
         context,
@@ -55,44 +52,48 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
       Icons.person,
     ];
 
+    final labels = ["Home", "Scan", "Profile"];
+
     return Container(
       decoration: const BoxDecoration(
         color: Colors.black,
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(25),
-          topRight: Radius.circular(25),
+          topLeft: Radius.circular(20),  // ✅ smooth curve
+          topRight: Radius.circular(20),
         ),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: List.generate(icons.length, (index) {
-          final bool isActive = widget.currentIndex == index;
+      padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 8), // ✅ gap on sides, tighter icons
+      child: SafeArea(
+        top: false,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween, // ✅ closer alignment
+          children: List.generate(icons.length, (index) {
+            final bool isActive = widget.currentIndex == index;
 
-          return GestureDetector(
-            onTap: () => _onItemTapped(index),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  icons[index],
-                  // ✅ Home icon white on details screen, orange on active page
-                  color: isActive ? Colors.orange : Colors.white,
-                ),
-                const SizedBox(height: 4),
-                if (isActive)
-                  Container(
-                    width: 20,
-                    height: 3,
-                    decoration: BoxDecoration(
-                      color: Colors.orange,
-                      borderRadius: BorderRadius.circular(2),
+            return GestureDetector(
+              onTap: () => _onItemTapped(index),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    icons[index],
+                    size: 26,
+                    color: isActive ? Colors.orange : Colors.white,
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    labels[index],
+                    style: TextStyle(
+                      fontSize: 11.5,
+                      fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+                      color: isActive ? Colors.orange : Colors.white,
                     ),
                   ),
-              ],
-            ),
-          );
-        }),
+                ],
+              ),
+            );
+          }),
+        ),
       ),
     );
   }

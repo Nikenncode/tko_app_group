@@ -9,6 +9,8 @@ import 'screens/special_edition_screen.dart';
 import 'screens/toys_list_screen.dart';
 import 'screens/coming_soon_screen.dart';
 import 'screens/discord_screen.dart';
+import 'widgets/greeting_text.dart';
+import 'offer_screen.dart';
 
 
 class HomeScreen extends StatelessWidget {
@@ -41,21 +43,18 @@ class HomeScreen extends StatelessWidget {
   // --- HEADER ---
   Widget _buildHeader() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Good Afternoon,",
-                style: GoogleFonts.poppins(fontSize: 16),
-              ),
+              const GreetingText(),
               Text(
                 "Tyler.",
                 style: GoogleFonts.poppins(
-                  fontSize: 22,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -63,7 +62,7 @@ class HomeScreen extends StatelessWidget {
           ),
           Image.asset(
             'assets/logo/name.png',
-            height: 36, // adjust height as needed
+            height: 30, // adjust height as needed
             fit: BoxFit.contain,
           ),
         ],
@@ -76,6 +75,45 @@ class HomeScreen extends StatelessWidget {
       "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"
     ][DateTime.now().weekday - 1];
 
+    if (weekday == "monday") {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Container(
+          width: double.infinity,
+          height: 90,
+          decoration: BoxDecoration(
+            color: Colors.brown[200],
+            borderRadius: BorderRadius.circular(14),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.15),
+                blurRadius: 6,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Center(
+            child: Text(
+              "NO EVENTS TODAY",
+              style: GoogleFonts.bangers(
+                fontSize: 20,
+                color: Colors.black87,
+                letterSpacing: 1.2,
+                fontWeight: FontWeight.bold,
+                shadows: [
+                  Shadow(
+                    color: Colors.black.withOpacity(0.15),
+                    offset: const Offset(1, 1),
+                    blurRadius: 1,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     final imagePath = 'assets/event_banners/$weekday.png';
 
     return Padding(
@@ -83,6 +121,7 @@ class HomeScreen extends StatelessWidget {
       child: _bannerBox(imagePath),
     );
   }
+
 
   Widget _bannerBox(String imagePath) {
     return Container(
@@ -226,6 +265,7 @@ class HomeScreen extends StatelessWidget {
       {"name": "Special Edition", "icon": Icons.star},
       {"name": "Discord", "icon": Icons.chat_rounded},
       {"name": "Coming Soon", "icon": Icons.hourglass_bottom},
+      {"name": "Offers", "icon": Icons.local_offer},
     ];
 
     return Padding(
@@ -235,9 +275,9 @@ class HomeScreen extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         itemCount: categories.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
+          crossAxisCount: 4,
           crossAxisSpacing: 8,  // ↓ reduced from 10
-          childAspectRatio: 0.90, // ↓ slightly tighter boxes
+          childAspectRatio: 0.80, // ↓ slightly tighter boxes
         ),
         itemBuilder: (context, index) {
           final category = categories[index];
@@ -274,7 +314,7 @@ class HomeScreen extends StatelessWidget {
                   break;
 
                 default:
-                  destination = const PointsDetailsScreen();
+                  destination = const OffersListScreen();
               }
 
               Navigator.push(
@@ -285,10 +325,12 @@ class HomeScreen extends StatelessWidget {
 
             child: Column(
               mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center, // ✅ Ensures perfect centering
+              crossAxisAlignment: CrossAxisAlignment.center, // ✅ Keeps text aligned with icon
               children: [
                 Container(
-                  width: 65,
-                  height: 65,
+                  width: 60, // slightly reduced for better balance
+                  height: 60,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
@@ -303,10 +345,10 @@ class HomeScreen extends StatelessWidget {
                   child: Icon(
                     category["icon"] as IconData,
                     color: Colors.orange[700],
-                    size: 30,
+                    size: 28,
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 4), // ✅ reduced spacing between icon and text
                 Text(
                   category["name"] as String,
                   textAlign: TextAlign.center,
@@ -318,6 +360,7 @@ class HomeScreen extends StatelessWidget {
                 ),
               ],
             ),
+
           );
         },
       ),

@@ -177,7 +177,6 @@ class _ToysListScreenState extends State<ToysListScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: const CustomBottomNav(currentIndex: -1),
 
       body: GridView.builder(
         padding: const EdgeInsets.all(16),
@@ -188,6 +187,7 @@ class _ToysListScreenState extends State<ToysListScreen> {
           mainAxisSpacing: 12,
           childAspectRatio: 0.75, // slightly taller cards, avoids overflow
         ),
+
         itemBuilder: (context, index) {
           final toy = toys[index];
           return GestureDetector(

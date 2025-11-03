@@ -93,110 +93,133 @@ class ComingSoonScreen extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.close, color: Colors.black87),
+            onPressed: () =>
+                Navigator.popUntil(context, (route) => route.isFirst),
+          ),
+        ],
         backgroundColor: Colors.white,
         elevation: 2,
-        centerTitle: true,
       ),
       bottomNavigationBar: const CustomBottomNav(currentIndex: -1),
 
       // 🧱 Grid view layout
-      body: GridView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: upcomingItems.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, // ✅ 2 per row
-          crossAxisSpacing: 12,
-          mainAxisSpacing: 12,
-          childAspectRatio: 0.65, // ✅ Adjust height/width ratio
-        ),
-        itemBuilder: (context, index) {
-          final item = upcomingItems[index];
-          return Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
-                  blurRadius: 5,
-                  offset: const Offset(2, 2),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 🖼 Product image
-                ClipRRect(
-                  borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(12)),
-                  child: Stack(
-                    children: [
-                      Image.asset(
-                        item["image"],
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        height: 160,
-                      ),
-                      Positioned(
-                        right: 10,
-                        top: 10,
-                        child: Icon(
-                          Icons.favorite_border,
-                          color: Colors.black54,
-                          size: 22,
-                        ),
+      body: Column(
+        children: [
+          // Divider line below AppBar
+          Container(
+            height: 3,
+            color: Colors.black12,
+            width: double.infinity,
+          ),
+
+          // GridView inside Expanded so it scrolls properly
+          Expanded(
+            child: GridView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: upcomingItems.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, // ✅ 2 per row
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+                childAspectRatio: 0.65, // ✅ Adjust height/width ratio
+              ),
+              itemBuilder: (context, index) {
+                final item = upcomingItems[index];
+                return Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        blurRadius: 5,
+                        offset: const Offset(2, 2),
                       ),
                     ],
                   ),
-                ),
-
-                // 🏷 Product details
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        item["name"],
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        item["price"],
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          const Icon(Icons.circle, color: Colors.red, size: 8),
-                          const SizedBox(width: 5),
-                          Text(
-                            item["availability"],
-                            style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              color: Colors.redAccent,
-                              fontWeight: FontWeight.w500,
+                      // 🖼 Product image
+                      ClipRRect(
+                        borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(12)),
+                        child: Stack(
+                          children: [
+                            Image.asset(
+                              item["image"],
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: 160,
                             ),
-                          ),
-                        ],
+                            const Positioned(
+                              right: 10,
+                              top: 10,
+                              child: Icon(
+                                Icons.favorite_border,
+                                color: Colors.black54,
+                                size: 22,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // 🏷 Product details
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 6),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item["name"],
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 13,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              item["price"],
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Row(
+                              children: [
+                                const Icon(Icons.circle,
+                                    color: Colors.red, size: 8),
+                                const SizedBox(width: 5),
+                                Text(
+                                  item["availability"],
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 12,
+                                    color: Colors.redAccent,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
-                ),
-              ],
+                );
+              },
             ),
-          );
-        },
+          ),
+        ],
       ),
     );
   }

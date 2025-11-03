@@ -5,17 +5,18 @@ class ProductListScreen extends StatefulWidget {
   const ProductListScreen({super.key});
 
   @override
-  State<ProductListScreen> createState() => _ProductListPageState();
+  State<ProductListScreen> createState() => _ProductListScreenState();
 }
 
-class _ProductListPageState extends State<ProductListScreen> {
-  bool showSingles = true;
+class _ProductListScreenState extends State<ProductListScreen>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
 
   final List<Map<String, dynamic>> singlesCategories = [
-    {"name": "Pokemon"},
-    {"name": "Yu-Gi-Oh"},
-    {"name": "Magic: The Gathering"},
-    {"name": "One Piece"},
+    {"name": "Pokemon", "image": "assets/banners/pokemon.png"},
+    {"name": "Yu-Gi-Oh", "image": "assets/banners/yugi.png"},
+    {"name": "Magic: The Gathering", "image": "assets/banners/mtg.png"},
+    {"name": "One Piece", "image": "assets/banners/one_piece.png"},
   ];
 
   final List<Map<String, dynamic>> sealedCategories = [
@@ -28,141 +29,173 @@ class _ProductListPageState extends State<ProductListScreen> {
   ];
 
   @override
-  Widget build(BuildContext context) {
-    final categories = showSingles ? singlesCategories : sealedCategories;
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 2,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
-          onPressed: () => Navigator.pop(context),
-        ),
         title: Text(
           "Cards",
           style: GoogleFonts.poppins(
-            fontWeight: FontWeight.bold,
             color: Colors.black,
+            fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
         actions: [
           IconButton(
             icon: const Icon(Icons.close, color: Colors.black87),
-            onPressed: () => Navigator.popUntil(context, (route) => route.isFirst),
+            onPressed: () =>
+                Navigator.popUntil(context, (route) => route.isFirst),
           ),
         ],
+        backgroundColor: Colors.white,
+        elevation: 2,
+        bottom: TabBar(
+          controller: _tabController,
+          labelColor: Colors.orange,
+          unselectedLabelColor: Colors.black,
+          indicatorColor: Colors.orange,
+          labelStyle: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+          tabs: const [
+            Tab(text: "Singles"),
+            Tab(text: "Sealed"),
+          ],
+        ),
       ),
-
-      body: Column(
+      body: TabBarView(
+        controller: _tabController,
         children: [
-          // --- Header Toggle (Singles / Sealed) ---
-          SizedBox(
-            height: 60,
-            child: Row(
+          _buildSinglesGrid(),
+          _buildSealedList(),
+        ],
+      ),
+    );
+  }
+
+  // --- Singles Section (Column Layout with Image on Left) ---
+  Widget _buildSinglesGrid() {
+    return GridView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: singlesCategories.length,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+        childAspectRatio: 0.9, // slightly taller to fit image
+      ),
+      itemBuilder: (context, index) {
+        final category = singlesCategories[index];
+        final imagePath = category["image"];
+
+        return GestureDetector(
+          onTap: () {
+            // TODO: Navigate to product list for this category
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: const Color(0xFFF4F4F4), // ✅ light background like banner
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.grey.shade300, width: 0.8),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.07),
+                  blurRadius: 5,
+                  offset: const Offset(2, 2),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Left half — Singles
+                // --- Image Section ---
                 Expanded(
-                  child: GestureDetector(
-                    onTap: () => setState(() => showSingles = true),
-                    child: MouseRegion(
-                      onHover: (_) {},
-                      child: AnimatedDefaultTextStyle(
-                        duration: const Duration(milliseconds: 200),
-                        style: GoogleFonts.poppins(
-                          fontSize: showSingles ? 22 : 18,
-                          fontWeight:
-                          showSingles ? FontWeight.bold : FontWeight.w500,
-                          color: showSingles ? Colors.orange : Colors.black54,
-                          decoration: showSingles
-                              ? TextDecoration.underline
-                              : TextDecoration.none,
-                        ),
-                        child: Center(child: Text("Singles")),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(
+                        imagePath,
+                        fit: BoxFit.contain, // ✅ full image without cropping
+                        width: double.infinity,
+                        height: double.infinity,
+                        errorBuilder: (context, error, stackTrace) =>
+                        const Icon(Icons.image_not_supported,
+                            size: 50, color: Colors.grey),
                       ),
                     ),
                   ),
                 ),
 
-                // Right half — Sealed
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () => setState(() => showSingles = false),
-                    child: MouseRegion(
-                      onHover: (_) {},
-                      child: AnimatedDefaultTextStyle(
-                        duration: const Duration(milliseconds: 200),
-                        style: GoogleFonts.poppins(
-                          fontSize: !showSingles ? 22 : 18,
-                          fontWeight:
-                          !showSingles ? FontWeight.bold : FontWeight.w500,
-                          color: !showSingles ? Colors.orange : Colors.black54,
-                          decoration: !showSingles
-                              ? TextDecoration.underline
-                              : TextDecoration.none,
-                        ),
-                        child: Center(child: Text("Sealed")),
-                      ),
+                // --- Text Below Image ---
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Text(
+                    category["name"],
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.poppins(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
                     ),
                   ),
                 ),
               ],
             ),
           ),
+        );
+      },
+    );
+  }
 
-          // Divider Line
-          Container(height: 1, color: Colors.grey[300]),
-
-          const SizedBox(height: 16),
-
-          // --- Category Grid ---
-          Expanded(
-            child: GridView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: categories.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: 1.1,
-              ),
-              itemBuilder: (context, index) {
-                final category = categories[index];
-                return GestureDetector(
-                  onTap: () {
-                    // TODO: Navigate to category-specific product list
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 5,
-                          offset: const Offset(2, 2),
-                        ),
-                      ],
-                    ),
-                    child: Center(
-                      child: Text(
-                        category["name"],
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
+  // --- Sealed Section (List Style like Tim Hortons) ---
+  Widget _buildSealedList() {
+    return ListView.separated(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      itemCount: sealedCategories.length,
+      separatorBuilder: (context, index) => Divider(
+        height: 1,
+        thickness: 1,
+        color: Colors.grey[300],
+        indent: 16,
+        endIndent: 16,
+      ),
+      itemBuilder: (context, index) {
+        final category = sealedCategories[index];
+        return ListTile(
+          contentPadding:
+          const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          leading: Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Icon(Icons.shopping_bag_outlined,
+                color: Colors.black54, size: 28),
+          ),
+          title: Text(
+            category["name"],
+            style: GoogleFonts.poppins(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
             ),
           ),
-        ],
-      ),
+          trailing: const Icon(Icons.arrow_forward_ios_rounded,
+              color: Colors.black45, size: 18),
+          onTap: () {
+            // TODO: Navigate to product list
+          },
+        );
+      },
     );
   }
 }
